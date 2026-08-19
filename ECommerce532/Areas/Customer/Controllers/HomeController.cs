@@ -4,8 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
-namespace ECommerce532.Controllers;
+namespace ECommerce532.Areas.Customer.Controllers;
 
+[Area(AreaConstants.CUSTOMER_AREA)]
 public class HomeController : Controller
 {
     private readonly ApplicationDbContext _db = new();

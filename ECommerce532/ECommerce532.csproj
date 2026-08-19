@@ -20,6 +20,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Areas\Identity\Controllers\" />
+    <Folder Include="Areas\Identity\Views\" />
+    <Folder Include="Areas\Chat\Controllers\" />
+    <Folder Include="Areas\Chat\Views\" />
     <Folder Include="wwwroot\imgs\products\" />
   </ItemGroup>
 

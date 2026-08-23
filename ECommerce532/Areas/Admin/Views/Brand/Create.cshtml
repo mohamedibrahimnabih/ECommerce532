@@ -1,0 +1,27 @@
+﻿<div class="container">
+    <div class="row"><div class="display-6 my-4">Create New Category</div></div>
+    <div class="row">
+        @* <form action="/Admin/Category/Create"> *@
+        <form method="post">
+            <div class="mb-3">
+                <label for="Name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="Name" name="Name" aria-describedby="Name">
+            </div>
+            <div class="mb-3">
+                <label for="Description" class="form-label">Description</label>
+                <div class="form-floating">
+                    <textarea class="form-control" name="Description" placeholder="Leave a description here" id="Description"></textarea>
+                    <label for="Description">Leave a description here</label>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="Status" class="form-label">Status</label>
+                <select name="Status" class="form-select" aria-label="Status">
+                    <option value="true">Active</option>
+                    <option value="false">In Active</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>

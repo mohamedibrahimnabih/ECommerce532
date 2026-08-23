@@ -4,27 +4,27 @@ using Microsoft.EntityFrameworkCore;
 namespace ECommerce532.Areas.Admin.Controllers;
 
 [Area(AreaConstants.ADMIN_AREA)]
-public class CategoryController : Controller
+public class BrandController : Controller
 {
     private readonly ApplicationDbContext _db = new();
 
     public IActionResult Index(string? query, int page = 1, int size = 4)
     {
-        var categories = _db.Categories.AsQueryable();
+        var brands = _db.Brands.AsQueryable();
 
         if (query is not null)
-            categories = categories.Where(e => e.Name.ToLower().Contains(query.ToLower()));
+            brands = brands.Where(e => e.Name.ToLower().Contains(query.ToLower()));
 
         // ViewBag Vs ViewData (MVC only)
         //ViewBag.Query = query ?? "";
         //ViewData["Query"] = query ?? "";
 
-        var totalPages = Math.Ceiling(categories.Count() / (double)size);
-        categories = categories.Skip((page - 1) * size).Take(size);
+        var totalPages = Math.Ceiling(brands.Count() / (double)size);
+        brands = brands.Skip((page - 1) * size).Take(size);
 
-        return View(new CategoryWithFilterVM
+        return View(new BrandWithFilterVM
         {
-            Categories = categories,
+            Brands = brands,
             Query = query ?? "",
             TotalPages = totalPages,
             CurrentPage = page,
@@ -38,15 +38,32 @@ public class CategoryController : Controller
     }
 
     [HttpPost]
-    public IActionResult Create(Category category)
+    public IActionResult Create(Brand brand, IFormFile Img) // photo.png
     {
-        //_db.Categories.Add(new Category()
+        if (Img is not null && Img.Length > 0)
+        {
+            //var fileName = Guid.NewGuid().ToString() + Path.GetExtension(Img.FileName);
+            //var fileName = Img.FileName + DateTime.Now.ToString("dd-MM-yyyy") + Path.GetExtension(Img.FileName); 
+            var fileName = $"{Guid.NewGuid().ToString()}-{DateTime.Now.ToString("dd-MM-yyyy")}{Path.GetExtension(Img.FileName)}"; 
+
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "imgs", "brands", fileName);
+
+            using(var stream = System.IO.File.Create(filePath))
+            {
+                Img.CopyTo(stream);
+            }
+
+            brand.Logo = fileName;
+        }
+
+        //_db.Brands.Add(new Brand()
         //{
         //    Name = name,
         //    Description = Description,
         //    Status = status
         //});
-        _db.Categories.Add(category);
+
+        _db.Brands.Add(brand);
         _db.SaveChanges();
 
         return RedirectToAction(nameof(Index));
@@ -55,24 +72,57 @@ public class CategoryController : Controller
     [HttpGet]
     public IActionResult Update(int id)
     {
-        var category = _db.Categories.AsNoTracking().FirstOrDefault(e => e.Id == id);
+        var brand = _db.Brands.AsNoTracking().FirstOrDefault(e => e.Id == id);
 
-        if (category is null)
+        if (brand is null)
             return RedirectToAction(nameof(HomeController.NotFoundPage), ControllerConstants.HOME_CONTROLLER);
 
-        return View(category);
+        return View(brand);
     }
 
     [HttpPost]
-    public IActionResult Update(Category category)
+    public IActionResult Update(Brand brand, IFormFile Img)
     {
-        //_db.Categories.Add(new Category()
+        var brandInDB = _db.Brands.AsNoTracking().FirstOrDefault(e => e.Id == brand.Id);
+
+        if (brandInDB is null) return NotFound();
+
+        if (Img is not null && Img.Length > 0)
+        {
+            // Save New Img in wwwroot
+
+            //var fileName = Guid.NewGuid().ToString() + Path.GetExtension(Img.FileName);
+            //var fileName = Img.FileName + DateTime.Now.ToString("dd-MM-yyyy") + Path.GetExtension(Img.FileName); 
+            var fileName = $"{Guid.NewGuid().ToString()}-{DateTime.Now.ToString("dd-MM-yyyy")}{Path.GetExtension(Img.FileName)}";
+
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "imgs", "brands", fileName);
+
+            using (var stream = System.IO.File.Create(filePath))
+            {
+                Img.CopyTo(stream);
+            }
+
+            // Delete Old Img from wwwroot
+
+            var oldFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "imgs", "brands", brandInDB.Logo);
+
+            if (System.IO.File.Exists(oldFilePath))
+                System.IO.File.Delete(oldFilePath);
+
+            // Replace img in DB
+
+            brand.Logo = fileName;
+        }
+        else
+            brand.Logo = brandInDB.Logo;
+
+        //_db.Brands.Add(new Brand()
         //{
         //    Name = name,
         //    Description = Description,
         //    Status = status
         //});
-        _db.Categories.Update(category);
+        _db.Brands.Update(brand);
         _db.SaveChanges();
 
         return RedirectToAction(nameof(Index));
@@ -80,12 +130,12 @@ public class CategoryController : Controller
 
     public IActionResult Delete(int id)
     {
-        var category = _db.Categories.FirstOrDefault(e => e.Id == id);
+        var brand = _db.Brands.FirstOrDefault(e => e.Id == id);
 
-        if (category is null)
+        if (brand is null)
             return RedirectToAction(nameof(HomeController.NotFoundPage), ControllerConstants.HOME_CONTROLLER);
 
-        _db.Categories.Remove(category);
+        _db.Brands.Remove(brand);
         _db.SaveChanges();
 
         return RedirectToAction(nameof(Index));

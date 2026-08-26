@@ -1,0 +1,67 @@
+﻿@model ProductWithFilterVM
+
+<div class="container">
+    <div class="row"><div class="display-6 my-4">Create New Product</div></div>
+    <div class="row">
+        @* <form action="/Admin/Product/Create"> *@
+        <form method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="Name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="Name" name="Name" aria-describedby="Name">
+            </div>
+            <div class="mb-3">
+                <label for="Description" class="form-label">Description</label>
+                <div class="form-floating">
+                    <textarea class="form-control" name="Description" placeholder="Leave a description here" id="Description"></textarea>
+                    <label for="Description">Leave a description here</label>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="Status" class="form-label">Status</label>
+                <select name="Status" class="form-select" aria-label="Status">
+                    <option value="true">Active</option>
+                    <option value="false">In Active</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="MainImg" class="form-label">Upload Main Img</label>
+                <input class="form-control" type="file" name="MainImg" id="MainImg" accept="image/*">
+            </div>
+            <div class="mb-3">
+                <label for="SubImgs" class="form-label">Upload Sub Imgs</label>
+                <input class="form-control" type="file" name="subImgs" id="SubImgs" multiple accept="image/*">
+            </div>
+            <div class="mb-3">
+                <label for="Price" class="form-label">Price</label>
+                <input type="text" class="form-control" id="Price" name="Price" aria-describedby="Price">
+            </div>
+            <div class="mb-3">
+                <label for="Discount" class="form-label">Discount</label>
+                <input type="text" class="form-control" id="Discount" name="Discount" aria-describedby="Discount">
+            </div>
+            <div class="mb-3">
+                <label for="Quantity" class="form-label">Quantity</label>
+                <input type="text" class="form-control" id="Quantity" name="Quantity" aria-describedby="Quantity">
+            </div>
+            <div class="mb-3">
+                <label for="CategoryId" class="form-label">Category</label>
+                <select name="CategoryId" id="CategoryId" class="form-select">
+                    @foreach (var item in Model.Categories)
+                    {
+                        <option value="@item.Id">@item.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="BrandId" class="form-label">Brand</label>
+                <select name="BrandId" id="BrandId" class="form-select">
+                    @foreach (var item in Model.Brands)
+                    {
+                        <option value="@item.Id">@item.Name</option>
+                    }
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>

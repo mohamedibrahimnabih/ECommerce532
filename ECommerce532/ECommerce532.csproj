@@ -25,7 +25,7 @@
     <Folder Include="Areas\Chat\Controllers\" />
     <Folder Include="Areas\Chat\Views\" />
     <Folder Include="wwwroot\imgs\brands\" />
-    <Folder Include="wwwroot\imgs\products\" />
+    <Folder Include="wwwroot\imgs\products\sub-imgs\" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,104 @@
+﻿@model ProductWithDetailsVM
+
+<div class="container">
+    <div class="row"><div class="display-6 my-4">Create New Product</div></div>
+    <div class="row">
+        @* <form action="/Admin/Product/Create"> *@
+        <form method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="Name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="Name" name="Name" aria-describedby="Name" value="@Model.Product.Name">
+            </div>
+            <div class="mb-3">
+                <label for="Description" class="form-label">Description</label>
+                <div class="form-floating">
+                    <textarea class="form-control" name="Description" placeholder="Leave a description here" id="Description">@Model.Product.Description</textarea>
+                    <label for="Description">Leave a description here</label>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="Status" class="form-label">Status</label>
+                <select name="Status" class="form-select" aria-label="Status">
+                    @if (Model.Product.Status)
+                    {
+                        <option value="true" selected>Active</option>
+                        <option value="false">In Active</option>
+                    }
+                    else
+                    {
+                        <option value="true">Active</option>
+                        <option value="false" selected>In Active</option>
+                    }
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="MainImg" class="form-label">Upload Main Img</label>
+                <input class="form-control" type="file" name="MainImg" id="MainImg" accept="image/*">
+            </div>
+            <div class="mb-3">
+                <img id="preview"
+                     src="~/imgs/products/@Model.Product.MainImg"
+                     alt="Current Image"
+                     style="max-width: 200px; border:1px solid #ccc; padding:5px; border-radius:10px;" />
+            </div>
+            <div class="mb-3">
+                <label for="SubImgs" class="form-label">Upload Sub Imgs</label>
+                <input class="form-control" type="file" name="subImgs" id="SubImgs" multiple accept="image/*">
+            </div>
+            <div class="mb-3">
+                @foreach (var item in Model.ProductSubImgs)
+                {
+                    <img id="preview"
+                         src="~/imgs/products/sub-imgs/@item.SubImg"
+                         alt="Current Image"
+                         style="max-width: 200px; border:1px solid #ccc; padding:5px; border-radius:10px;" />
+                }
+            </div>
+            <div class="mb-3">
+                <label for="Price" class="form-label">Price</label>
+                <input type="text" class="form-control" id="Price" name="Price" aria-describedby="Price" value="@Model.Product.Price">
+            </div>
+            <div class="mb-3">
+                <label for="Discount" class="form-label">Discount</label>
+                <input type="text" class="form-control" id="Discount" name="Discount" aria-describedby="Discount" value="@Model.Product.Discount">
+            </div>
+            <div class="mb-3">
+                <label for="Quantity" class="form-label">Quantity</label>
+                <input type="text" class="form-control" id="Quantity" name="Quantity" aria-describedby="Quantity" value="@Model.Product.Quantity">
+            </div>
+            <div class="mb-3">
+                <label for="CategoryId" class="form-label">Category</label>
+                <select name="CategoryId" id="CategoryId" class="form-select">
+                    @foreach (var item in Model.Categories)
+                    {
+                        @if (Model.Product.CategoryId == item.Id)
+                        {
+                            <option value="@item.Id" selected>@item.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="BrandId" class="form-label">Brand</label>
+                <select name="BrandId" id="BrandId" class="form-select">
+                    @foreach (var item in Model.Brands)
+                    {
+                        @if (Model.Product.BrandId == item.Id)
+                        {
+                            <option value="@item.Id" selected>@item.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>

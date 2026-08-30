@@ -68,7 +68,7 @@
             </div>
             <div class="mb-3">
                 <label for="CategoryId" class="form-label">Category</label>
-                <select name="CategoryId" id="CategoryId" class="form-select">
+                @* <select name="CategoryId" id="CategoryId" class="form-select">
                     @foreach (var item in Model.Categories)
                     {
                         @if (Model.Product.CategoryId == item.Id)
@@ -80,11 +80,12 @@
                             <option value="@item.Id">@item.Name</option>
                         }
                     }
-                </select>
+                </select> *@
+                <select class="form-select" asp-for="Product.CategoryId" asp-items="Model.Categories"></select>
             </div>
             <div class="mb-3">
                 <label for="BrandId" class="form-label">Brand</label>
-                <select name="BrandId" id="BrandId" class="form-select">
+                @* <select name="BrandId" id="BrandId" class="form-select">
                     @foreach (var item in Model.Brands)
                     {
                         @if (Model.Product.BrandId == item.Id)
@@ -96,7 +97,8 @@
                             <option value="@item.Id">@item.Name</option>
                         }
                     }
-                </select>
+                </select> *@
+                <select class="form-select" asp-for="Product.BrandId" asp-items="Model.Brands"></select>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>

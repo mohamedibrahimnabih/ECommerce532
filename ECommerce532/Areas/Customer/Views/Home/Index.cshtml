@@ -210,12 +210,14 @@
                                                     }
                                                 }
                                             <div class="product-details">
-                                                <a href="/Home/Details/@item.Id"><i class="fa fa-eye fa-1x"></i></a>
+                                                @* <a href="/Customer/Home/Details/@item.Id"><i class="fa fa-eye fa-1x"></i></a> *@
+                                                <a asp-area="Customer" asp-controller="Home" asp-action="Details" asp-route-id="@item.Id"><i class="fa fa-eye fa-1x"></i></a>
                                             </div>
                                         </div>
                                         <div class="text-center rounded-bottom p-4">
                                             <a href="#" class="d-block mb-2">@item.Category.Name</a>
-                                            <a href="/Home/Details/@item.Id" class="d-block h4">@item.Name</a>
+                                            @* <a href="/Customer/Home/Details/@item.Id" class="d-block h4">@item.Name</a> *@
+                                            <a asp-area="Customer" asp-controller="Home" asp-action="Details" asp-route-id="@item.Id" class="d-block h4">@item.Name</a>
                                             @if(item.Discount > 0)
                                             {
                                                 <del class="me-2 fs-5">@item.Price.ToString("c")</del>

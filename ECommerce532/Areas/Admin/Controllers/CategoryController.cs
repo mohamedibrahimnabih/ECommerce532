@@ -34,12 +34,15 @@ public class CategoryController : Controller
     [HttpGet]
     public IActionResult Create()
     {
-        return View();
+        return View(new Category());
     }
 
     [HttpPost]
     public IActionResult Create(Category category)
     {
+        if (!ModelState.IsValid)
+            return View(category);
+
         //_db.Categories.Add(new Category()
         //{
         //    Name = name,
@@ -66,6 +69,9 @@ public class CategoryController : Controller
     [HttpPost]
     public IActionResult Update(Category category)
     {
+        if (!ModelState.IsValid)
+            return View(category);
+
         //_db.Categories.Add(new Category()
         //{
         //    Name = name,

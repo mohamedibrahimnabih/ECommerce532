@@ -8,14 +8,16 @@
             @* <input type="hidden" name="Id" value="@Model.Id" /> *@
             <div class="mb-3">
                 <label for="Name" class="form-label">Name</label>
-                <input type="text" class="form-control" id="Name" name="Name" value="@Model.Name" aria-describedby="Name">
+                <input class="form-control" asp-for="Name">
+                <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="mb-3">
                 <label for="Description" class="form-label">Description</label>
                 <div class="form-floating">
-                    <textarea class="form-control" name="Description" placeholder="Leave a description here" id="Description">@Model.Description</textarea>
+                    <textarea class="form-control" placeholder="Leave a description here" asp-for="Name"></textarea>
                     <label for="Description">Leave a description here</label>
                 </div>
+                <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="mb-3">
                 <label for="Status" class="form-label">Status</label>
@@ -31,8 +33,13 @@
                         <option value="false" selected>In Active</option>
                     }
                 </select>
+                <span asp-validation-for="Status" class="text-danger"></span>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial">
+}

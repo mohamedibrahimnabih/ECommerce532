@@ -1,27 +1,44 @@
-﻿<div class="container">
+﻿@model Category
+
+<div class="container">
     <div class="row"><div class="display-6 my-4">Create New Category</div></div>
     <div class="row">
         @* <form action="/Admin/Category/Create"> *@
         <form method="post">
             <div class="mb-3">
-                <label for="Name" class="form-label">Name</label>
-                <input type="text" class="form-control" id="Name" name="Name" aria-describedby="Name">
+                <label asp-for="Name" class="form-label"></label>
+                <input class="form-control" asp-for="Name">
+                <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="mb-3">
                 <label for="Description" class="form-label">Description</label>
                 <div class="form-floating">
-                    <textarea class="form-control" name="Description" placeholder="Leave a description here" id="Description"></textarea>
+                    <textarea class="form-control" asp-for="Description" placeholder="Leave a description here"></textarea>
                     <label for="Description">Leave a description here</label>
                 </div>
+                <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="mb-3">
                 <label for="Status" class="form-label">Status</label>
                 <select name="Status" class="form-select" aria-label="Status">
-                    <option value="true">Active</option>
-                    <option value="false">In Active</option>
+                    @if (Model.Status)
+                    {
+                        <option value="true" selected>Active</option>
+                        <option value="false">In Active</option>
+                    }
+                    else
+                    {
+                        <option value="true">Active</option>
+                        <option value="false" selected>In Active</option>
+                    }
                 </select>
+                <span asp-validation-for="Status" class="text-danger"></span>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial">
+}

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace ECommerce532.Areas.Admin.Controllers;
@@ -137,8 +138,16 @@ public class ProductController : Controller
         {
             Product = product ?? new(),
             ProductSubImgs = productSubImgs,
-            Categories = categories,
-            Brands = brands
+            Categories = categories.Select(e => new SelectListItem
+            {
+                Text = e.Name,
+                Value = e.Id.ToString(),
+            }),
+            Brands = brands.Select(e => new SelectListItem
+            {
+                Text = e.Name,
+                Value = e.Id.ToString(),
+            }),
         });
     }
 

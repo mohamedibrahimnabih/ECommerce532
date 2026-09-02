@@ -196,7 +196,7 @@ public class ProductController : Controller
                 fileUpload.DeleteFileLocally(oldFilePath);
             }
 
-            _db.ProductSubImgs.RemoveRange(oldImgs);
+            _productSubImgRepository.DeleteRange();
 
             // create new img in wwwroot & db
             foreach (var item in subImgs)

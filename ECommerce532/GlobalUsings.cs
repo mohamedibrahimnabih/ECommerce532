@@ -5,4 +5,4 @@ global using ECommerce532.DataAccess;
 global using ECommerce532.Utility;
 
 global using ECommerce532.Helpers;
- 
+global using ECommerce532.Repositories;

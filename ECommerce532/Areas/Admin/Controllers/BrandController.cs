@@ -6,11 +6,11 @@ namespace ECommerce532.Areas.Admin.Controllers;
 [Area(AreaConstants.ADMIN_AREA)]
 public class BrandController : Controller
 {
-    private readonly ApplicationDbContext _db = new();
-
+    //private readonly ApplicationDbContext _db = new();
+    private readonly Repository<Brand> _repository = new();
     public IActionResult Index(string? query, int page = 1, int size = 4)
     {
-        var brands = _db.Brands.AsQueryable();
+        var brands = _repository.Get();
 
         if (query is not null)
             brands = brands.Where(e => e.Name.ToLower().Contains(query.ToLower()));
@@ -38,7 +38,7 @@ public class BrandController : Controller
     }
 
     [HttpPost]
-    public IActionResult Create(Brand brand, IFormFile Img) // photo.png
+    public async Task<IActionResult> Create(Brand brand, IFormFile Img, CancellationToken ct = default) // photo.png
     {
         if (Img is not null && Img.Length > 0)
         {
@@ -63,8 +63,10 @@ public class BrandController : Controller
         //    Status = status
         //});
 
-        _db.Brands.Add(brand);
-        _db.SaveChanges();
+        await _repository.CreateAsync(brand, ct);
+        await _repository.CommitAsync(ct);
+
+        TempData[NotificationConstants.SUCCESS_NOTIFICATION] = "Create Brand Successfully";
 
         return RedirectToAction(nameof(Index));
     }
@@ -72,7 +74,7 @@ public class BrandController : Controller
     [HttpGet]
     public IActionResult Update(int id)
     {
-        var brand = _db.Brands.AsNoTracking().FirstOrDefault(e => e.Id == id);
+        var brand = _repository.GetOne(e => e.Id == id, tracked: false);
 
         if (brand is null)
             return RedirectToAction(nameof(HomeController.NotFoundPage), ControllerConstants.HOME_CONTROLLER);
@@ -81,9 +83,9 @@ public class BrandController : Controller
     }
 
     [HttpPost]
-    public IActionResult Update(Brand brand, IFormFile Img)
+    public async Task<IActionResult> Update(Brand brand, IFormFile Img, CancellationToken ct = default)
     {
-        var brandInDB = _db.Brands.AsNoTracking().FirstOrDefault(e => e.Id == brand.Id);
+        var brandInDB = _repository.GetOne(e => e.Id == brand.Id, tracked: false);
 
         if (brandInDB is null) return NotFound();
 
@@ -122,21 +124,25 @@ public class BrandController : Controller
         //    Description = Description,
         //    Status = status
         //});
-        _db.Brands.Update(brand);
-        _db.SaveChanges();
+        _repository.Update(brand);
+        await _repository.CommitAsync(ct);
+
+        TempData[NotificationConstants.SUCCESS_NOTIFICATION] = "Update Brand Successfully";
 
         return RedirectToAction(nameof(Index));
     }
 
-    public IActionResult Delete(int id)
+    public async Task<IActionResult> Delete(int id, CancellationToken ct = default)
     {
-        var brand = _db.Brands.FirstOrDefault(e => e.Id == id);
+        var brand = _repository.GetOne(e => e.Id == id);
 
         if (brand is null)
             return RedirectToAction(nameof(HomeController.NotFoundPage), ControllerConstants.HOME_CONTROLLER);
 
-        _db.Brands.Remove(brand);
-        _db.SaveChanges();
+        _repository.Update(brand);
+        await _repository.CommitAsync(ct);
+
+        TempData[NotificationConstants.SUCCESS_NOTIFICATION] = "Delete Brand Successfully";
 
         return RedirectToAction(nameof(Index));
     }

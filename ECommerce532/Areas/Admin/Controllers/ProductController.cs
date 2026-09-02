@@ -7,15 +7,23 @@ namespace ECommerce532.Areas.Admin.Controllers;
 [Area(AreaConstants.ADMIN_AREA)]
 public class ProductController : Controller
 {
-    private readonly ApplicationDbContext _db = new();
+    //private readonly ApplicationDbContext _db = new();
     IFileUpload fileUpload = new FileUpload();
+
+    private readonly Repository<Product> _productRepository = new();
+    private readonly ProductSubImgRepository _productSubImgRepository = new();
+    private readonly Repository<Category> _categoryRepository = new();
+    private readonly Repository<Brand> _brandRepository = new();
+
 
     public IActionResult Index(ProductFilterVM productFilterVM, int page = 1, int size = 5)
     {
-        var products = _db.Products
-            .Include(e => e.Category)
-            .Include(e => e.Brand)
-            .AsQueryable();
+        //var products = _db.Products
+        //    .Include(e => e.Category)
+        //    .Include(e => e.Brand)
+        //    .AsQueryable();
+
+        var products = _productRepository.Get(includes: [e => e.Category, e => e.Brand]);
 
         // Filter
 
@@ -44,8 +52,8 @@ public class ProductController : Controller
 
         // Extra data
 
-        var categories = _db.Categories.AsQueryable();
-        var brands = _db.Brands.AsQueryable();
+        var categories = _categoryRepository.Get();
+        var brands = _brandRepository.Get();
 
         return View(new ProductWithFilterVM()
         {
@@ -66,8 +74,8 @@ public class ProductController : Controller
     [HttpGet]
     public IActionResult Create()
     {
-        var categories = _db.Categories.AsQueryable();
-        var brands = _db.Brands.AsQueryable();
+        var categories = _categoryRepository.Get();
+        var brands = _brandRepository.Get();
 
         return View(new ProductWithFilterVM()
         {
@@ -77,7 +85,7 @@ public class ProductController : Controller
     }
 
     [HttpPost]
-    public IActionResult Create(Product product, IFormFile mainImg, List<IFormFile> subImgs/*, List<string> colors*/)
+    public async Task<IActionResult> Create(Product product, IFormFile mainImg, List<IFormFile> subImgs/*, List<string> colors*/, CancellationToken ct = default)
     {
         if(mainImg is not null && mainImg.Length > 0)
         {
@@ -94,8 +102,8 @@ public class ProductController : Controller
             product.MainImg = fileName;
         }
 
-        _db.Products.Add(product);
-        _db.SaveChanges();
+        await _productRepository.CreateAsync(product, ct);
+        await _productRepository.CommitAsync(ct);
 
         if (subImgs.Any())
         {
@@ -109,14 +117,20 @@ public class ProductController : Controller
 
                 fileUpload.UploadFileLocally(filePath, item);
 
-                _db.ProductSubImgs.Add(new()
+                //_db.ProductSubImgs.Add(new()
+                //{
+                //    SubImg = fileName,
+                //    ProductId = product.Id
+                //});
+
+                await _productSubImgRepository.CreateAsync(new()
                 {
                     SubImg = fileName,
                     ProductId = product.Id
                 });
             }
 
-            _db.SaveChanges();
+            await _productRepository.CommitAsync(ct);
         }
 
         return RedirectToAction(nameof(Index));
@@ -125,14 +139,15 @@ public class ProductController : Controller
     [HttpGet]
     public IActionResult Update(int id)
     {
-        var product =  _db.Products.AsNoTracking().FirstOrDefault(e => e.Id == id);
+        var product = _productRepository.GetOne(e => e.Id == id, tracked: false);
 
         if (product is null) return NotFound();
 
-        var categories = _db.Categories.AsQueryable();
-        var brands = _db.Brands.AsQueryable();
+        var categories = _categoryRepository.Get();
+        var brands = _brandRepository.Get();
 
-        var productSubImgs = _db.ProductSubImgs.Where(e => e.ProductId == product.Id);
+        //var productSubImgs = _db.ProductSubImgs.Where(e => e.ProductId == product.Id);
+        var productSubImgs = _productSubImgRepository.Get(e => e.ProductId == product.Id);
 
         return View(new ProductWithDetailsVM()
         {
@@ -152,9 +167,10 @@ public class ProductController : Controller
     }
 
     [HttpPost]
-    public IActionResult Update(Product product, IFormFile mainImg, List<IFormFile> subImgs/*, List<string> colors*/)
+    public async Task<IActionResult> Update(Product product, IFormFile mainImg, List<IFormFile> subImgs/*, List<string> colors*/, CancellationToken ct = default)
     {
-        var productInDB = _db.Products.AsNoTracking().FirstOrDefault(e => e.Id == product.Id);
+        //var productInDB = _db.Products.AsNoTracking().FirstOrDefault(e => e.Id == product.Id);
+        var productInDB = _productRepository.GetOne(e => e.Id == product.Id, tracked: false);
         if(productInDB is null) return NotFound();
 
         if (mainImg is not null && mainImg.Length > 0)
@@ -180,13 +196,14 @@ public class ProductController : Controller
         else
             product.MainImg = productInDB.MainImg;
 
-        _db.Products.Update(product);
-        _db.SaveChanges();
+        _productRepository.Update(product);
+        await _productRepository.CommitAsync(ct);
 
         if (subImgs.Any())
         {
             // delete old img from wwwroot & db
-            var oldImgs = _db.ProductSubImgs.Where(e => e.ProductId == product.Id);
+            //var oldImgs = _db.ProductSubImgs.Where(e => e.ProductId == product.Id);
+            var oldImgs = _productSubImgRepository.Get(e => e.ProductId == product.Id);
 
             foreach (var item in oldImgs)
             {
@@ -196,7 +213,7 @@ public class ProductController : Controller
                 fileUpload.DeleteFileLocally(oldFilePath);
             }
 
-            _productSubImgRepository.DeleteRange();
+            _productSubImgRepository.DeleteRange(oldImgs);
 
             // create new img in wwwroot & db
             foreach (var item in subImgs)
@@ -209,20 +226,20 @@ public class ProductController : Controller
 
                 fileUpload.UploadFileLocally(filePath, item);
 
-                _db.ProductSubImgs.Add(new()
+                await _productSubImgRepository.CreateAsync(new()
                 {
                     SubImg = fileName,
                     ProductId = product.Id
                 });
             }
 
-            _db.SaveChanges();
+            await _productRepository.CommitAsync(ct);
         }
 
         return RedirectToAction(nameof(Index));
     }
 
-    public IActionResult Delete(int id)
+    public IActionResult Delete(int id, CancellationToken ct = default)
     {
         // TODO
 

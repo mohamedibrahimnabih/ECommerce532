@@ -10,11 +10,21 @@ public class ProductController : Controller
     //private readonly ApplicationDbContext _db = new();
     IFileUpload fileUpload = new FileUpload();
 
-    private readonly Repository<Product> _productRepository = new();
-    private readonly ProductSubImgRepository _productSubImgRepository = new();
-    private readonly Repository<Category> _categoryRepository = new();
-    private readonly Repository<Brand> _brandRepository = new();
+    private readonly IRepository<Product> _productRepository;
+    private readonly IBulkRepository<ProductSubImg> _productSubImgRepository;// = new BulkRepository<ProductSubImg>();
+    private readonly IRepository<Category> _categoryRepository;// = new Repository<Category>();
+    private readonly IRepository<Brand> _brandRepository;// = new Repository<Brand>();
 
+    public ProductController(IRepository<Product> productRepository, 
+        IBulkRepository<ProductSubImg> productSubImgRepository,
+        IRepository<Category> categoryRepository,
+        IRepository<Brand> brandRepository)
+    {
+        _productRepository = productRepository;
+        _productSubImgRepository = productSubImgRepository;
+        _categoryRepository = categoryRepository;
+        _brandRepository = brandRepository;
+    }
 
     public IActionResult Index(ProductFilterVM productFilterVM, int page = 1, int size = 5)
     {

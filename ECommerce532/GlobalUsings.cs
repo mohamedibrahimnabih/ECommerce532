@@ -6,3 +6,4 @@ global using ECommerce532.Utility;
 
 global using ECommerce532.Helpers;
 global using ECommerce532.Repositories;
+global using ECommerce532.Repositories.IRepositories;

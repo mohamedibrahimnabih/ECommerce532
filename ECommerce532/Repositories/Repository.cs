@@ -3,13 +3,14 @@ using System.Linq.Expressions;
 
 namespace ECommerce532.Repositories;
 
-public class Repository<T> where T : class
+public class Repository<T> : IRepository<T> where T : class
 {
-    protected readonly ApplicationDbContext _context = new();
-    protected readonly DbSet<T> _db;
+    private readonly ApplicationDbContext _context;// = new();
+    private readonly DbSet<T> _db;
 
-    public Repository()
+    public Repository(ApplicationDbContext context)
     {
+        _context = context;
         _db = _context.Set<T>();
     }
 

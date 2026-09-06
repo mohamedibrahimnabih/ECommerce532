@@ -7,7 +7,12 @@ namespace ECommerce532.Areas.Admin.Controllers;
 public class CategoryController : Controller
 {
     //private readonly ApplicationDbContext _db = new();
-    private readonly Repository<Category> _repository = new();
+    private readonly IRepository<Category> _repository;// = new Repository<Category>();
+
+    public CategoryController(IRepository<Category> repository)
+    {
+        _repository = repository;
+    }
 
     public IActionResult Index(string? query, int page = 1, int size = 4)
     {

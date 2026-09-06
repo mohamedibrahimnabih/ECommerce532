@@ -7,7 +7,13 @@ namespace ECommerce532.Areas.Admin.Controllers;
 public class BrandController : Controller
 {
     //private readonly ApplicationDbContext _db = new();
-    private readonly Repository<Brand> _repository = new();
+    private readonly IRepository<Brand> _repository;// = new Repository<Brand>();
+
+    public BrandController(IRepository<Brand> repository)
+    {
+        _repository = repository;
+    }
+
     public IActionResult Index(string? query, int page = 1, int size = 4)
     {
         var brands = _repository.Get();

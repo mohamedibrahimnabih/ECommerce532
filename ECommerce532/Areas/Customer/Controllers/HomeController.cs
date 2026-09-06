@@ -9,7 +9,12 @@ namespace ECommerce532.Areas.Customer.Controllers;
 [Area(AreaConstants.CUSTOMER_AREA)]
 public class HomeController : Controller
 {
-    private readonly ApplicationDbContext _db = new();
+    private readonly ApplicationDbContext _db;// = new();
+
+    public HomeController(ApplicationDbContext db)
+    {
+        _db = db;
+    }
 
     public IActionResult Index(ProductFilter filter)
     {

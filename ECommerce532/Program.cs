@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+
 namespace ECommerce532;
 
 public class Program
@@ -8,6 +11,22 @@ public class Program
 
         // Add services to the container.
         builder.Services.AddControllersWithViews();
+
+        builder.Services.AddScoped<IRepository<Category>, Repository<Category>>();
+        builder.Services.AddScoped<IRepository<Brand>, Repository<Brand>>();
+        builder.Services.AddScoped<IRepository<Product>, Repository<Product>>();
+        builder.Services.AddScoped<IBulkRepository<ProductSubImg>, BulkRepository<ProductSubImg>>();
+        builder.Services.AddScoped<IBulkRepository<ProductColor>, BulkRepository<ProductColor>>();
+
+        var connectionString =
+                        builder.Configuration.GetConnectionString("DefaultConnection")
+                            ?? throw new InvalidOperationException("Connection string"
+                            + "'DefaultConnection' not found.");
+
+        builder.Services.AddDbContext<ApplicationDbContext>(optionsBuilder =>
+        {
+            optionsBuilder.UseSqlServer(connectionString);
+        });
 
         var app = builder.Build();
 

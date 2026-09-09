@@ -1,0 +1,49 @@
+@model ECommerce532.ViewModels.LoginVM
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="container my-3">
+    <h1>Login</h1>
+
+    <h4>LoginVM</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-12">
+            <form asp-action="Login" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="form-group">
+                    <label asp-for="EmailOrUserName" class="control-label"></label>
+                    <input asp-for="EmailOrUserName" class="form-control" />
+                    <span asp-validation-for="EmailOrUserName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Password" class="control-label"></label>
+                    <input asp-for="Password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <div class="form-group form-check">
+                    <input asp-for="Remember" class="form-check-input" />
+                    <label asp-for="Remember" class="form-check-label"></label>
+                </div>
+
+                <div class="form-group my-3">
+                    <input type="submit" value="Login" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="my-3">
+        <a asp-action="Register">Don't have an account? Register</a>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <partial name="_NotificationPartial" />
+}

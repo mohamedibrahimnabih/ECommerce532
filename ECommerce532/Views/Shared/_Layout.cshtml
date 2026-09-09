@@ -29,6 +29,8 @@
     <link href="~/css/customer/style.css" rel="stylesheet">
 
     <link rel="stylesheet" href="~/ECommerce532.styles.css" asp-append-version="true" />
+
+    <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
 </head>
 
 <body>
@@ -367,6 +369,12 @@
     
     <!-- Template Javascript -->
     <script src="~/js/customer/main.js"></script>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    @RenderSection("Scripts", false)
+    @RenderSection("Notification", false)
 </body>
 
 </html>

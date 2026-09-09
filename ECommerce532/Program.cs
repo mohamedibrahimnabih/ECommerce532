@@ -1,3 +1,6 @@
+using ECommerce532.Servies;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -27,6 +30,20 @@ public class Program
         {
             optionsBuilder.UseSqlServer(connectionString);
         });
+
+        builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+        {
+            options.User.RequireUniqueEmail = true;
+            options.Password.RequiredLength = 8;
+            options.Password.RequiredUniqueChars = 0;
+            options.Lockout.MaxFailedAccessAttempts = 6;
+            options.SignIn.RequireConfirmedEmail = true;
+            options.SignIn.RequireConfirmedPhoneNumber = false;
+        })
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders();
+
+        builder.Services.AddTransient<IEmailSender, EmailSender>();
 
         var app = builder.Build();
 

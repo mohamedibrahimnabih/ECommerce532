@@ -16,6 +16,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Brand> Brands { get; set; }
     public DbSet<ProductSubImg> ProductSubImgs { get; set; }
     public DbSet<ProductColor> ProductColors { get; set; }
+    public DbSet<ApplicationUserOTP> ApplicationUserOTPs { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -79,13 +79,19 @@
                     <div class="dropdown">
                         <a href="#" class="dropdown-toggle text-muted ms-2" data-bs-toggle="dropdown"><small><i class="fa fa-home me-2"></i> My Dashboard</small></a>
                         <div class="dropdown-menu rounded">
-                            <a href="#" class="dropdown-item"> Login</a>
-                            <a href="#" class="dropdown-item"> Wishlist</a>
-                            <a href="#" class="dropdown-item"> My Card</a>
-                            <a href="#" class="dropdown-item"> Notifications</a>
-                            <a href="#" class="dropdown-item"> Account Settings</a>
-                            <a href="#" class="dropdown-item"> My Account</a>
-                            <a href="#" class="dropdown-item"> Log Out</a>
+                            @if(User.Identity is not null && User.Identity.IsAuthenticated)
+                            {
+                                <a href="/identity/notifications" class="dropdown-item"> Notifications</a>
+                                <a href="/customer/wishlist" class="dropdown-item"> Wishlist</a>
+                                <a href="/customer/cart" class="dropdown-item"> My Card</a>
+                                <a href="/Identity/profile" class="dropdown-item"> Account Settings</a>
+                                <a href="/Identity/account/LogOut" class="dropdown-item"> Log Out</a>
+                            }
+                            else
+                            {
+                                <a href="/identity/account/Register" class="dropdown-item"> Register</a>
+                                <a href="/identity/account/Login" class="dropdown-item"> Login</a>
+                            }
                         </div>
                     </div>
                 </div>

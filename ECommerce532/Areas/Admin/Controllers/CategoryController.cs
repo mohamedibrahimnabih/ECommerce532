@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace ECommerce532.Areas.Admin.Controllers;
@@ -14,6 +15,7 @@ public class CategoryController : Controller
         _repository = repository;
     }
 
+    [Authorize(Roles = $"{RoleConstants.SUPER_ADMIN},{RoleConstants.ADMIN},{RoleConstants.EMPLOYEE}")]
     public IActionResult Index(string? query, int page = 1, int size = 4)
     {
         var categories = _repository.Get();
@@ -38,6 +40,7 @@ public class CategoryController : Controller
     }
 
     [HttpGet]
+    [Authorize(Roles = $"{RoleConstants.SUPER_ADMIN},{RoleConstants.ADMIN}")]
     public IActionResult Create()
     {
         return View(new Category());
@@ -45,6 +48,7 @@ public class CategoryController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = $"{RoleConstants.SUPER_ADMIN},{RoleConstants.ADMIN}")]
     public async Task<IActionResult> Create(Category category, CancellationToken ct = default)
     {
         if (!ModelState.IsValid)
@@ -69,6 +73,7 @@ public class CategoryController : Controller
     }
 
     [HttpGet]
+    [Authorize(Roles = $"{RoleConstants.SUPER_ADMIN},{RoleConstants.ADMIN}")]
     public IActionResult Update(int id)
     {
         //var category = _db.Categories.AsNoTracking().FirstOrDefault(e => e.Id == id);
@@ -82,6 +87,7 @@ public class CategoryController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [Authorize(Roles = $"{RoleConstants.SUPER_ADMIN},{RoleConstants.ADMIN}")]
     public async Task<IActionResult> Update(Category category, CancellationToken ct = default)
     {
         if (!ModelState.IsValid)
@@ -102,6 +108,7 @@ public class CategoryController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+    [Authorize(Roles = $"{RoleConstants.SUPER_ADMIN},{RoleConstants.ADMIN}")]
     public async Task<IActionResult> Delete(int id, CancellationToken ct = default)
     {
         var category = _repository.GetOne(e => e.Id == id);

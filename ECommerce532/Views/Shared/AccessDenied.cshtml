@@ -1,0 +1,38 @@
+@{
+    ViewData["Title"] = "Access Denied";
+}
+
+<div class="container-fluid py-5">
+    <div class="container py-5">
+        <div class="row h-100 align-items-center">
+            <div class="col-lg-8 mx-auto">
+                <div class="text-center">
+                    <!-- Icon -->
+                    <div class="mb-4">
+                        <i class="fas fa-lock fa-5x text-danger"></i>
+                    </div>
+
+                    <!-- Title -->
+                    <h1 class="display-4 fw-bold text-dark mb-3">Access Denied</h1>
+
+                    <!-- Message -->
+                    <p class="fs-5 text-muted mb-4">
+                        You do not have permission to access this resource. 
+                        <br />
+                        Please contact an administrator if you believe this is an error.
+                    </p>
+
+                    <!-- Action Buttons -->
+                    <div class="d-flex gap-3 justify-content-center flex-wrap">
+                        <a href="/" class="btn btn-primary px-5 py-2">
+                            <i class="fas fa-home me-2"></i> Go to Home
+                        </a>
+                        <a href="javascript:history.back()" class="btn btn-outline-secondary px-5 py-2">
+                            <i class="fas fa-arrow-left me-2"></i> Go Back
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

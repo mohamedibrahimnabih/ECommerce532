@@ -20,6 +20,9 @@ public class Program
         builder.Services.AddScoped<IRepository<Product>, Repository<Product>>();
         builder.Services.AddScoped<IBulkRepository<ProductSubImg>, BulkRepository<ProductSubImg>>();
         builder.Services.AddScoped<IBulkRepository<ProductColor>, BulkRepository<ProductColor>>();
+        builder.Services.AddScoped<IRepository<ApplicationUserOTP>, Repository<ApplicationUserOTP>>();
+
+        builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 
         var connectionString =
                         builder.Configuration.GetConnectionString("DefaultConnection")
@@ -45,6 +48,12 @@ public class Program
 
         builder.Services.AddTransient<IEmailSender, EmailSender>();
 
+        builder.Services.ConfigureApplicationCookie(option =>
+        {
+            option.LoginPath = "/identity/account/login";
+            option.AccessDeniedPath = "/identity/account/AccessDenied";
+        });
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -65,6 +74,12 @@ public class Program
             name: "default",
             pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}")
             .WithStaticAssets();
+
+        using (var scope = app.Services.CreateScope())
+        {
+            var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+            dbInitializer.Initialize(); // Runs migrations and seeds data
+        }
 
         app.Run();
     }

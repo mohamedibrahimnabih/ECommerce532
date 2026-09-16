@@ -21,6 +21,8 @@ public class Program
         builder.Services.AddScoped<IBulkRepository<ProductSubImg>, BulkRepository<ProductSubImg>>();
         builder.Services.AddScoped<IBulkRepository<ProductColor>, BulkRepository<ProductColor>>();
         builder.Services.AddScoped<IRepository<ApplicationUserOTP>, Repository<ApplicationUserOTP>>();
+        builder.Services.AddScoped<IRepository<Cart>, Repository<Cart>>();
+        builder.Services.AddScoped<IRepository<Promotion>, Repository<Promotion>>();
 
         builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 

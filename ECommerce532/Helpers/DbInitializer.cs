@@ -44,7 +44,7 @@ public class DbInitializer : IDbInitializer
                 EmailConfirmed = true
             };
 
-            _userManager.CreateAsync(user, "Admin123@").GetAwaiter().GetResult();
+            _userManager.CreateAsync(user, "Admin123#").GetAwaiter().GetResult();
 
             _userManager.AddToRoleAsync(user, RoleConstants.SUPER_ADMIN).GetAwaiter().GetResult();
         }

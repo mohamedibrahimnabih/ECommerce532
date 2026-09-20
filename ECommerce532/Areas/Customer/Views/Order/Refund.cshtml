@@ -1,0 +1,28 @@
+﻿@{
+    ViewData["Title"] = "Refund Requested";
+}
+
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 70vh;">
+    <div class="card shadow-sm border-0 text-center p-4" style="max-width: 500px; width: 100%;">
+        <div class="card-body">
+            <div class="mb-3">
+                <i class="bi bi-arrow-counterclockwise text-primary" style="font-size: 4rem;"></i>
+            </div>
+
+            <h3 class="card-title fw-bold mb-2">Refund Requested</h3>
+            <p class="text-muted mb-4">
+                Your refund has been submitted successfully. It may take a few business days
+                for the amount to reflect back in your original payment method.
+            </p>
+
+            <div class="d-grid gap-2">
+                <a asp-action="Index" class="btn btn-primary">
+                    Back to My Orders
+                </a>
+                <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">
+                    Continue Shopping
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

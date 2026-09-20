@@ -1,0 +1,120 @@
+﻿@model OrderWithFilterVM
+@{
+    ViewData["Title"] = "My Orders";
+}
+
+<div class="container my-4">
+    <h3 class="fw-bold mb-4">My Orders</h3>
+
+    <!-- Search by Order ID -->
+    <form asp-action="Index" method="get" class="row g-2 mb-4">
+        <div class="col-auto">
+            <input type="number" name="query" value="@Model.Query" class="form-control"
+                   placeholder="Search by Order #" />
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+        @if (Model.Query is not null)
+        {
+            <div class="col-auto">
+                <a asp-action="Index" class="btn btn-outline-secondary">Clear</a>
+            </div>
+        }
+    </form>
+
+    @if (!Model.Orders.Any())
+    {
+        <div class="alert alert-info text-center">
+            No orders found.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Order #</th>
+                        <th>Payment Date</th>
+                        <th>Payment Status</th>
+                        <th>Order Status</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var order in Model.Orders)
+                    {
+                        <tr>
+                            <td>#@order.Id</td>
+                            <td>@(order.PaymentDate?.ToString("dd MMM yyyy") ?? "-")</td>
+                            <td>
+                                <span class="badge @GetPaymentStatusBadge(order.PaymentStatus.ToString())">
+                                    @order.PaymentStatus
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge @GetOrderStatusBadge(order.OrderStatus.ToString())">
+                                    @order.OrderStatus
+                                </span>
+                            </td>
+                            <td class="text-end">
+                                <a asp-action="Details" asp-route-id="@order.Id" class="btn btn-sm btn-outline-primary">
+                                    Details
+                                </a>
+
+                                @if (order.OrderStatus < OrderStatus.Shipped)
+                                {
+                                    <a asp-action="Refund" asp-route-id="@order.Id" class="btn btn-sm btn-outline-danger">
+                                        Refund
+                                    </a>
+                                }
+                                
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        @if (Model.TotalPages > 1)
+        {
+            <nav>
+                <ul class="pagination justify-content-center">
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                            <a class="page-link"
+                               asp-action="Index"
+                               asp-route-page="@i"
+                               asp-route-query="@Model.Query">
+                                @i
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        }
+    }
+</div>
+
+@functions {
+    string GetPaymentStatusBadge(string status) => status switch
+    {
+        "Succussed" or "Succeeded" or "Paid" => "bg-success",
+        "Pending" => "bg-warning text-dark",
+        "Failed" => "bg-danger",
+        _ => "bg-secondary"
+    };
+
+    string GetOrderStatusBadge(string status) => status switch
+    {
+        "InProcessing" or "Processing" => "bg-info text-dark",
+        "Shipped" => "bg-primary",
+        "Delivered" => "bg-success",
+        "Cancelled" => "bg-danger",
+        "Pending" => "bg-warning text-dark",
+        _ => "bg-secondary"
+    };
+}

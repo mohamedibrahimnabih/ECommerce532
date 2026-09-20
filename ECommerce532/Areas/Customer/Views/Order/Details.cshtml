@@ -1,0 +1,167 @@
+﻿@model IEnumerable<OrderItem>
+@{
+    ViewData["Title"] = "Order Details";
+
+    var firstItem = Model.FirstOrDefault();
+    var subtotal = Model.Sum(e => e.Price * e.Count);
+}
+
+<div class="container my-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold mb-0">
+            Order #@firstItem?.OrderId
+        </h3>
+        <a asp-action="Index" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left"></i> Back to Orders
+        </a>
+    </div>
+
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center">
+            No items found for this order.
+        </div>
+    }
+    else
+    {
+        <section>
+            <div class="container py-5 h-100">
+                <div class="row d-flex justify-content-center align-items-center h-100">
+                    <div class="col-12">
+                        <div class="card card-stepper" style="border-radius: 16px;">
+
+                            <div class="card-body p-5">
+
+                                <div class="d-flex justify-content-between align-items-center mb-5">
+                                    <div>
+                                        <h5 class="mb-0">INVOICE <span class="text-primary font-weight-bold">#Y34XDHR</span></h5>
+                                    </div>
+                                    <div class="text-end">
+                                        <p class="mb-0">Expected Arrival <span>01/12/19</span></p>
+                                        <p class="mb-0">USPS <span class="font-weight-bold">234094567242423422898</span></p>
+                                    </div>
+                                </div>
+
+                                <ul id="progressbar-2" class="d-flex justify-content-between mx-0 mt-0 mb-5 px-0 pt-0 pb-2">
+
+                                    @if (firstItem.Order.OrderStatus == OrderStatus.InProcessing)
+                                    {
+                                        <li class="step0 active text-center" id="step1"></li>
+                                        <li class="step0 text-muted text-center" id="step2"></li>
+                                        <li class="step0 text-muted text-center" id="step3"></li>
+                                        <li class="step0 text-muted text-end" id="step4"></li>
+                                    }
+                                    else if (firstItem.Order.OrderStatus == OrderStatus.Shipped)
+                                    {
+                                    <li class="step0 active text-center" id="step1"></li>
+                                        <li class="step0 active text-center" id="step2"></li>
+                                    <li class="step0 text-muted text-center" id="step3"></li>
+                                    <li class="step0 text-muted text-end" id="step4"></li>
+                                    }
+                                    else if (firstItem.Order.OrderStatus == OrderStatus.OnTheWay)
+                                    {
+                                    <li class="step0 active text-center" id="step1"></li>
+                                        <li class="step0 active text-center" id="step2"></li>
+                                    <li class="step0 active text-center" id="step3"></li>
+                                    <li class="step0 text-muted text-end" id="step4"></li>
+                                    }
+                                    else if (firstItem.Order.OrderStatus == OrderStatus.Completed)
+                                    {
+                                    <li class="step0 active text-center" id="step1"></li>
+                                        <li class="step0 active text-center" id="step2"></li>
+                                        <li class="step0 active text-center" id="step3"></li>
+                                        <li class="step0 active text-end" id="step4"></li>
+                                    }
+
+                                    
+                                </ul>
+
+                                <div class="d-flex justify-content-between">
+                                    <div class="d-lg-flex align-items-center">
+                                        <i class="fas fa-clipboard-list fa-3x me-lg-4 mb-3 mb-lg-0"></i>
+                                        <div>
+                                            <p class="fw-bold mb-1">Order</p>
+                                            <p class="fw-bold mb-0">Processed</p>
+                                        </div>
+                                    </div>
+                                    <div class="d-lg-flex align-items-center">
+                                        <i class="fas fa-box-open fa-3x me-lg-4 mb-3 mb-lg-0"></i>
+                                        <div>
+                                            <p class="fw-bold mb-1">Order</p>
+                                            <p class="fw-bold mb-0">Shipped</p>
+                                        </div>
+                                    </div>
+                                    <div class="d-lg-flex align-items-center">
+                                        <i class="fas fa-shipping-fast fa-3x me-lg-4 mb-3 mb-lg-0"></i>
+                                        <div>
+                                            <p class="fw-bold mb-1">Order</p>
+                                            <p class="fw-bold mb-0">En Route</p>
+                                        </div>
+                                    </div>
+                                    <div class="d-lg-flex align-items-center">
+                                        <i class="fas fa-home fa-3x me-lg-4 mb-3 mb-lg-0"></i>
+                                        <div>
+                                            <p class="fw-bold mb-1">Order</p>
+                                            <p class="fw-bold mb-0">Arrived</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <div class="card shadow-sm border-0">
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Product</th>
+                            <th class="text-center">Price</th>
+                            <th class="text-center">Qty</th>
+                            <th class="text-end">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center gap-3">
+                                        @if (!string.IsNullOrEmpty(item.Product?.MainImg))
+                                        {
+                                            <img src="~/imgs/products/@item.Product?.MainImg" alt="@item.Product.Name"
+                                                 style="width:60px;height:60px;object-fit:cover;" class="rounded" />
+                                        }
+                                        <span>@item.Product?.Name</span>
+                                    </div>
+                                </td>
+                                <td class="text-center">@item.Price.ToString("C")</td>
+                                <td class="text-center">@item.Count</td>
+                                <td class="text-end fw-semibold">@((item.Price * item.Count).ToString("C"))</td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3" class="text-end fw-bold">Subtotal</td>
+                            <td class="text-end fw-bold">@subtotal.ToString("C")</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+        <div class="mt-4 text-end">
+            <a asp-action="Refund" asp-route-orderId="@firstItem?.OrderId" class="btn btn-outline-danger">
+                Request Refund
+            </a>
+        </div>
+    }
+</div>

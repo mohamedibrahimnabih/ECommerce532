@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ECommerce532.Validations;
+namespace ECommerce532.Helpers.Validations;
 
 //[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter)]
 public class LetterOnlyAttribute : ValidationAttribute
